@@ -7,7 +7,7 @@ use Exception;
 class Repo
 {
     private $repo;
-    private const PATH = __DIR__ . '/users.json';
+    private const PATH = __DIR__ . '../users.json';
 
     //public function __construct()
     //{
