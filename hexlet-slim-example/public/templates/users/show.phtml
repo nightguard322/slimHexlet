@@ -1,0 +1,9 @@
+<h2>Username: <?= htmlspecialchars($user['name']) ?></h2>
+<h3>User id is <?= htmlspecialchars($user['id']) ?></h3>
+<h3>User email is <?= htmlspecialchars($user['email']) ?></h3>
+<hr>
+<p><a href="/users/<?= "{$user['id']}" ?>/edit">Редактировать</a></p>
+<form action="/users/<?= "{$user['id']}" ?>" method="post">
+    <input type="hidden" name="_METHOD" value="DELETE">
+    <input type="submit" value="Delete">
+</form>

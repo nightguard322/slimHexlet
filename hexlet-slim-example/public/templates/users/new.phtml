@@ -1,0 +1,31 @@
+<h1>New user</h1>
+<hr>
+<?php if (isset($messages)): ?>
+    <?php foreach($messages['errors'] as $message):?>
+        <?= $message ?>
+    <?php endforeach; ?>
+<?php endif; ?>
+<form action="/users" method="post">
+    <div>
+        <label for="">Nickname:
+            <input type="text" name="user[name]" value="<?= htmlspecialchars($user['name'])?>" id="">
+        </label>
+        <?php if (isset($errors['name'])): ?>
+        <div>
+            <?= $errors['name']?>
+        </div>
+        <?php endif ?>
+    </div>
+    <div>
+        <label for="">Email:
+            <input type="email" name="user[email]" value="<?= htmlspecialchars($user['email'])?>" id="">
+        </label>
+        <?php if (isset($errors['email'])): ?>
+        <div>
+            <?= $errors['email']?>
+        </div>
+        <?php endif ?>
+    </div>
+        <input type="submit" value="Submit">
+</form>
+<p><a href="/users">return to Users</a></p>

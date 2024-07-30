@@ -1,0 +1,16 @@
+<form action="">
+    <input type="search" name="name" id="" value=<?=$name?>>
+    <input type="submit" value="search">
+</form>
+<hr>
+<?php if (isset($messages['success'])): ?>
+    <?php foreach($messages['success'] as $message):?>
+        <?= $message ?>
+    <?php endforeach; ?>
+<?php endif; ?>
+<ul>
+<?php foreach($users as $user): ?>
+    <li><a href=<?= 'users/show/' . $user['id'] ?>><?= $user['name'] ?></a></li>
+<?php endforeach; ?>
+</ul>
+<p><a href="users/new">Создать нового пользователя</a></p>

@@ -1,0 +1,17 @@
+{
+    "name": "sasha/slim",
+    "autoload": {
+        "psr-4": {
+            "Sasha\\Slim\\": "src/"
+        }
+    },
+    "require": {
+        "slim/slim": "@dev",
+        "slim/psr7": "@dev",
+        "slim/http": "^1.4.0",
+        "slim/php-view": "@dev",
+        "php-di/php-di": "@dev",
+        "psr/http-message": "^1.1",
+        "slim/flash": "*"
+    }
+}
