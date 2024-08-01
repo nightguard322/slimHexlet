@@ -36,7 +36,7 @@ $app->get('/users/show/{id}', function($request, $response, $args) {
     return $this->get('renderer')->render($response, '/users/show.phtml', $params);
 })->setName('users.show');
 
-$app->get('/users', function ($request, $response) {
+$app->get('/', function ($request, $response) {
     $search = $request->getQueryParam('name') ?? '';
     $users = $_SESSION['users'] ?? [];
     $filtered = array_filter(
