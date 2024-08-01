@@ -10,6 +10,7 @@
 <?php endif; ?>
 <ul>
 <?php foreach($users as $user): ?>
+    <?php var_dump($user) ?>
     <li><a href=<?= 'users/show/' . $user['id'] ?>><?= $user['name'] ?></a></li>
 <?php endforeach; ?>
 </ul>

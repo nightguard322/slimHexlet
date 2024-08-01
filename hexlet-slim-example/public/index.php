@@ -27,9 +27,9 @@ $app->addErrorMiddleware(true, true, true);
 $router = $app->getRouteCollector()->getRouteParser();
 $validator = new Validator();
 
-$app->get('/users/show/{id}', function($request, $response, $args) use ($repo) {
+$app->get('/users/show/{id}', function($request, $response, $args) {
     $id = $args['id'];
-    $current = $repo->find($id, $request);
+    $current = $_SESSION['users'][$id];
     if (empty($current)) {
         return $response->withStatus(404)->write('404 Not found');
     }
@@ -37,12 +37,12 @@ $app->get('/users/show/{id}', function($request, $response, $args) use ($repo) {
     return $this->get('renderer')->render($response, '/users/show.phtml', $params);
 })->setName('users.show');
 
-$app->get('/users', function ($request, $response) use ($repo) {
+$app->get('/users', function ($request, $response) {
     $search = $request->getQueryParam('name') ?? '';
-    $users = $repo->all($request);
+    $users = $_SESSION['users'] ?? [];
     $filtered = array_filter(
         $users,
-        fn($user) => str_contains($user['name'], $search)
+        fn($user) => str_contains($user['name'], $search) //[1 => ['name' => name, 'id' => 'id']]
     );
     $messages = $this->get('flash')->getMessages();
     $params = ['name' => $search, 'users' => $filtered, 'messages' => $messages];
@@ -57,15 +57,14 @@ $app->get('/users/new', function ($request, $response) {
     return $this->get('renderer')->render($response, 'users/new.phtml', $params);
 })->setName('users.create');
 
-$app->post('/users', function ($request, $response) use ($router, $repo, $validator) {
+$app->post('/users', function ($request, $response) use ($router, $validator) {
     $user = $request->getParsedBodyParam('user');
     $errors = $validator->validate($user);
-    
     if (empty($errors)) {
         $this->get('flash')->addMessage('success', 'User successfully created');
-        $userData = $repo->prepare($user, $request);
-        return $response->withHeader('Set-Cookie', "users={$userData}")
-                        ->withRedirect($router->urlFor('users.index'), 302);
+        $user['id'] = uniqid();
+        $_SESSION['users'][$user['id']] = $user;
+        return $response->withRedirect($router->urlFor('users.index'), 302);
     }
     $this->get('flash')->addMessage('errors', 'Что то пошло не так');
     $messages = $this->get('flash')->getMessages() ?? ['errors' => []];
@@ -74,23 +73,22 @@ $app->post('/users', function ($request, $response) use ($router, $repo, $valida
 })->setName('users.store');
 
 $app->get('/users/{id}/edit', function ($request, $response, $args) use ($repo) {
-    $user = $repo->find($args['id'], $request);
+    $user = $_SESSION['users'][$args['id']];
     $params = ['user' => $user, 'errors' => '', 'messages' => ['errors' => []]];
     return $this->get('renderer')->render($response, 'users/edit.phtml', $params);
 })->setName('users.edit');
 
-$app->patch('/users/{id}', function ($request, $response, $args) use ($repo, $router, $validator) {
+$app->patch('/users/{id}', function ($request, $response, $args) use ($router, $validator) {
     $userData = $request->getParsedBodyParam('user');
-    $user = $repo->find($args['id'], $request);
+    $user = $_SESSION['users'][$args['id']];
     $errors = $validator->validate($user);
     
     if (empty($errors)) {
         $this->get('flash')->addMessage('success', 'User successfully created');
         $user['name'] = $userData['name'];
         $user['email'] = $userData['email'];
-        $userData = $repo->prepare($user, $request);
-        return $response->withHeader('Set-Cookie', "users={$userData}")
-                                ->withRedirect($router->urlFor('users.index'), 302);
+        $_SESSION['users'][$user['id']] = $user;
+        return $response->withRedirect($router->urlFor('users.index'), 302);
     }
     $params = ['user' => ['name' => $user['name'], 'email' => $user['email'], 'password' => '', 'password_confirmation' => ''],
             'errors' => $errors,
@@ -99,12 +97,11 @@ $app->patch('/users/{id}', function ($request, $response, $args) use ($repo, $ro
     return $this->get('renderer')->render($response, 'users/edit.phtml', $params);
 })->setName('users.update');
 
-$app->delete('/users/{id}', function ($request, $response, $args) use ($repo, $router) {
+$app->delete('/users/{id}', function ($request, $response, $args) use ($router) {
     $id = $args['id'];
     $this->get('flash')->addMessage('success', 'User successfully deleted');
-    $newCookies = $repo->delete($id, $request);
-    return $response->withHeader('Set-Cookie', "users={$newCookies}")
-                    ->withRedirect($router->urlFor('users.index'), 302);
+    unset($_SESSION['users'][$id]);
+    return $response->withRedirect($router->urlFor('users.index'), 302);
 });
 
 $app->run();
