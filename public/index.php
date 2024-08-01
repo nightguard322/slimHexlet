@@ -71,7 +71,7 @@ $app->post('/users', function ($request, $response) use ($router, $validator) {
     return $this->get('renderer')->render($response, 'users/new.phtml', $params);
 })->setName('users.store');
 
-$app->get('/users/{id}/edit', function ($request, $response, $args) use ($repo) {
+$app->get('/users/{id}/edit', function ($request, $response, $args) {
     $user = $_SESSION['users'][$args['id']];
     $params = ['user' => $user, 'errors' => '', 'messages' => ['errors' => []]];
     return $this->get('renderer')->render($response, 'users/edit.phtml', $params);
