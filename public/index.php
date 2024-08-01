@@ -20,7 +20,6 @@ $container->set('flash', function() {
     return new \Slim\Flash\Messages();
 });
 
-$repo = new Repo();
 $app = AppFactory::createFromContainer($container);
 $app->add(MethodOverrideMiddleware::class);
 $app->addErrorMiddleware(true, true, true);

@@ -1,2 +1,28 @@
 {
+    "name": "sasha/slim",
+    "autoload": {
+        "psr-4": {
+            "Sasha\\Slim\\": "src/"
+        }
+    },
+    "require": {
+        "symfony/polyfill-php80": "v1.30.0",
+        "slim/slim": "4.x-dev",
+        "slim/psr7": "dev-master",
+        "slim/php-view": "3.x-dev",
+        "slim/http": "1.4.0",
+        "slim/flash": "0.4.0",
+        "ralouphie/getallheaders": "3.0.3",
+        "psr/log": "3.0.0",
+        "psr/http-server-middleware": "1.0.2",
+        "psr/http-server-handler": "1.0.2",
+        "psr/http-message": "1.1",
+        "psr/http-factory": "1.1.0",
+        "psr/container": "2.0.2",
+        "php-di/php-di": "dev-master",
+        "php-di/invoker": "2.3.4",
+        "nikic/fast-route": "v1.3.0",
+        "laravel/serializable-closure": "v1.3.3",
+        "fig/http-message-util": "1.1.5"
+    }
 }
